@@ -2,20 +2,6 @@ use piston_window::graphics::{Context, rectangle};
 use piston_window::graphics::types::Color;
 use piston_window::graphics::Graphics;
 
-// use piston_window::*;
-// use piston_window::types::Color;
-//
-// use rand::{thread_rng, Rng};
-//
-// use snake::{Direction, Snake};
-// use draw::{draw_block, draw_rectangle};
-//
-// const FOOD_COLOR: Colo = [0.80, 0.00, 0.00, 1.0];
-// const BORDER_COLOR: Colo = [0.00, 0.00, 0.00, 1.0];
-// const GAMEOVER_COLOR: Colo = [0.90, 0.00, 0.00, 0.5];
-//
-// const MOVING_PERIOD: f64 = 0.1;
-// const RESTART_TIME: f64 = 1.0;
 const BLOCK_SIZE: f64 = 25.0;
 
 pub fn to_coord(game_coord: i32) -> f64 {
