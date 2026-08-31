@@ -1,20 +1,22 @@
-
 use piston_window::*;
-use piston_window::types::Color;
+use piston_window::graphics::types::Color;
+use piston_window::graphics::Context;
+use piston_window::graphics::Graphics;
 
-use rand::{thread_rng, Rng};
+use rand::RngExt;
+// use rand::{rng, Rng};
 
-use snake::{Direction, Snake};
-use draw::{draw_block, draw_rectangle};
+use crate::snake::{Direction, Snake};
+use crate::draw::{draw_block, draw_rectangle};
 
-const FOOD_COLOR: Colo = [0.80, 0.00, 0.00, 1.0];
-const BORDER_COLOR: Colo = [0.00, 0.00, 0.00, 1.0];
-const GAMEOVER_COLOR: Colo = [0.90, 0.00, 0.00, 0.5];
+const FOOD_COLOR: Color = [0.80, 0.00, 0.00, 1.0];
+const BORDER_COLOR: Color = [0.00, 0.00, 0.00, 1.0];
+const GAMEOVER_COLOR: Color = [0.90, 0.00, 0.00, 0.5];
 
 const MOVING_PERIOD: f64 = 0.1;
 const RESTART_TIME: f64 = 1.0;
 
-struct Game {
+pub struct Game {
     snake: Snake,
 
     food_exists: bool,
@@ -62,7 +64,7 @@ impl Game {
         self.update_snake(dir);
     }
 
-    pub fn draw(&self, con: &Context, g: &mut G2d) {
+    pub fn draw<G: Graphics>(&self, con: &Context, g: &mut G) {
         self.snake.draw(con, g);
 
         if self.food_exists {
@@ -77,31 +79,32 @@ impl Game {
         if self.game_over {
             draw_rectangle(GAMEOVER_COLOR, 0, 0, self.width, self.height, con, g);
         }
+    }
 
-        pub fn update(&mut self, delta_time: f64) {
-            self.waiting_time == delta_time;
+    pub fn update(&mut self, delta_time: f64) {
+        self.waiting_time = delta_time;
 
-            if self.game_over {
-                if self.waiting_time > RESTART_TIME {
-                    self.restart();
-                }
-                return;
+        if self.game_over {
+            if self.waiting_time > RESTART_TIME {
+                self.restart();
             }
+            return;
+        }
 
-            if !self.food_exists {
-                self.add_food();
-            }
+        if !self.food_exists {
+            self.add_food();
+        }
 
-            if self.waiting_time > MOVING_PERIOD {
-                self.update_snake(None);
-            }
+        if self.waiting_time > MOVING_PERIOD {
+            self.update_snake(None);
         }
     }
 
     fn check_eating(&mut self) {
         let (head_x, head_y): (i32, i32) = self.snake.head_position();
         if self.food_exists && self.food_x == head_x && self.food_y == head_y {
-            self.food_exists = falseself.snake.restore_tail();
+            self.food_exists = false;
+            self.snake.restore_tail();
         }
     }
 
@@ -116,12 +119,12 @@ impl Game {
     }
 
     fn add_food(&mut self) {
-        let mut rng = thread_rng();
-        let mut new_x = rng.gen_range(1, self.width - 1);
-        let mut new_y = rng.gen_range(1, self.height - 1);
+        let mut rng = rand::rng();
+        let mut new_x = rng.random_range(1..self.width - 1);
+        let mut new_y = rng.random_range(1..self.height - 1);
         while self.snake.overlap_tail(new_x, new_y) {
-            new_x = rng.gen_range(1, self.width - 1);
-            new_y = rng.gen_range(1, self.height - 1);
+            new_x = rng.random_range(1..self.width - 1);
+            new_y = rng.random_range(1..self.height - 1);
         }
 
         self.food_x = new_x;
@@ -140,13 +143,13 @@ impl Game {
     }
 
     fn restart(&mut self) {
-        snake = Snake::new(2, 2);
-        waiting_time = 0.0;
-        food_exists = true;
-        food_y = 6;
-        food_x = 4;
-        // width;
-        // height;
-        game_over = false;
+        self.snake = Snake::new(2, 2);
+        self.waiting_time = 0.0;
+        self.food_exists = true;
+        self.food_y = 6;
+        self.food_x = 4;
+        // self.width;
+        // self.height;
+        self.game_over = false;
     }
 }

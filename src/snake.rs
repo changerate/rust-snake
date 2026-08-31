@@ -1,8 +1,9 @@
+use piston_window::graphics::types::Color;
+use piston_window::graphics::Context;
+use piston_window::graphics::Graphics;
 use std::collections::LinkedList;
-use piston_window::{Context, G2d};
-use piston_window::types::Color;
 
-use draw::draw_block;
+use crate::draw::draw_block;
 
 const SNAKE_COLOR: Color = [0.0, 0.80, 0.00, 1.0];
 
@@ -60,7 +61,7 @@ impl Snake {
         }
     }
 
-    pub fn draw(&self, con: &Context, g: &mut G2d) {
+    pub fn draw<G: Graphics>(&self, con: &Context, g: &mut G) {
         for block in &self.body {
             draw_block(SNAKE_COLOR, block.x, block.y, con, g);
         }
@@ -72,11 +73,9 @@ impl Snake {
     }
 
     pub fn move_forward(&mut self, dir: Option<Direction>) {
-        match dir {
-            Some(d) => self.direction = d,
-            None => (),
+        if let Some(d) = dir {
+            self.direction = d;
         }
-
         let (last_x, last_y): (i32, i32) = self.head_position();
 
         let new_block = match self.direction {
@@ -110,9 +109,8 @@ impl Snake {
         let (head_x, head_y): (i32, i32) = self.head_position();
 
         let mut moving_dir = self.direction;
-        match dir {
-            Some(d) => moving_dir = d,
-            None => {}
+        if let Some(d) = dir {
+            moving_dir = d;
         }
 
         match moving_dir {
@@ -140,6 +138,6 @@ impl Snake {
                 break;
             }
         }
-        return false;
+        false
     }
 }

@@ -1,19 +1,21 @@
 extern crate rand;
 extern crate piston_window;
 
-mod draw;
 mod snake;
+mod draw;
 mod game;
 
 use piston_window::*;
-use piston_window::types::Color;
+use piston_window::graphics::types::Color;
+use piston_window::graphics::clear;
+use piston_window::PistonWindow;
+use piston_window::WindowSettings;
+use piston_window::Button;
 
-use game::Game;
-use draw::to_coord_u32;
+use crate::game::Game;
+use crate::draw::to_coord_u32;
 
 const BACK_COLOR: Color = [0.5, 0.5, 0.5, 1.0];
-
-
 
 
 fn main() {
@@ -31,7 +33,7 @@ fn main() {
         if let Some(Button::Keyboard(key)) = event.press_args() {
             game.key_pressed(key);
         }
-        window.draw_2d(&event, |c, g| {
+        window.draw_2d(&event, |c, g, _device| {
             clear(BACK_COLOR, g);
             game.draw(&c, g);
         });
