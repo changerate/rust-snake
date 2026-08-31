@@ -45,16 +45,22 @@ impl Game {
     }
 
     pub fn key_pressed(&mut self, key: Key) {
+        println!("key pressed: {:?}", key);
+
         if self.game_over {
             return;
         }
 
         let dir = match key {
+            Key::W => Some(Direction::Up),
+            Key::S => Some(Direction::Down),
+            Key::A => Some(Direction::Left),
+            Key::D => Some(Direction::Right),
             Key::Up => Some(Direction::Up),
             Key::Down => Some(Direction::Down),
             Key::Left => Some(Direction::Left),
             Key::Right => Some(Direction::Right),
-            _ => None
+            _ => return,
         };
 
         if dir.unwrap() == self.snake.head_direction().opposite() {
@@ -82,7 +88,7 @@ impl Game {
     }
 
     pub fn update(&mut self, delta_time: f64) {
-        self.waiting_time = delta_time;
+        self.waiting_time += delta_time;
 
         if self.game_over {
             if self.waiting_time > RESTART_TIME {
@@ -133,6 +139,8 @@ impl Game {
     }
 
     fn update_snake(&mut self, dir: Option<Direction>) {
+        // println!("snake alive: {:?}", self.check_if_snake_alive(dir));
+        // println!("waiting time: {:?}", self.waiting_time);
         if self.check_if_snake_alive(dir) {
             self.snake.move_forward(dir);
             self.check_eating();

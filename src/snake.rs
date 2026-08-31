@@ -5,7 +5,7 @@ use std::collections::LinkedList;
 
 use crate::draw::draw_block;
 
-const SNAKE_COLOR: Color = [0.0, 0.80, 0.00, 1.0];
+const SNAKE_COLOR: Color = [0.200, 0.439, 0.2, 1.0];
 
 #[derive(Copy, Clone, PartialEq)]
 pub enum Direction {
@@ -96,7 +96,8 @@ impl Snake {
                 y: last_y,
             },
         };
-        self.body.push_back(new_block);
+        println!("dir={:?}, last=({}, {}), new={:?}", dir.is_some(), last_x, last_y, (new_block.x, new_block.y)); // add this
+        self.body.push_front(new_block);
         let removed_block = self.body.pop_back().unwrap();
         self.tail = Some(removed_block);
     }
